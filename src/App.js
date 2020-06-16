@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './App.css';
 import jwtDecode from 'jwt-decode'
+import AuthContext from "./authContext";
 
 import {
   BrowserRouter as Router,
@@ -17,8 +18,7 @@ import SecretPage from './SecretPage'
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({ children, ...rest }) {
-  // const {token} = useContext(AuthContext)
-  const token = null
+  const {token} = useContext(AuthContext)
   return (
     <Route
       {...rest}
@@ -51,6 +51,12 @@ function App() {
   }
 
   return (
+    <AuthContext.Provider value={
+      {
+        token: token,
+        saveToken: (token) => {setTokenInLocalStorage(token)}
+      }
+    }>
     <div className="App">
         {userNameFromToken && 
           <div>
@@ -87,6 +93,7 @@ function App() {
         </div>
       </Router>
       </div>
+      </AuthContext.Provider>
   );
 }
 
